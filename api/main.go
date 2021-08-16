@@ -7,7 +7,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func GetMain(w http.ResponseWriter, r *http.Request) {
+func GetMain(w http.ResponseWriter, r *http.Request) {	
 	type Item struct {
 		Name	string  `json:"name"`
 		Price 	string 	`json:"price"`
@@ -16,6 +16,7 @@ func GetMain(w http.ResponseWriter, r *http.Request) {
 	}
 	items := []Item{}
 	category := r.URL.Query().Get("category")
+	page := r.URL.Query().Get("page")
 
 	col := colly.NewCollector()
 	col.OnHTML("ul.products", func(e *colly.HTMLElement) {
@@ -37,9 +38,20 @@ func GetMain(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Fprintf(w, string(j))
 	})
+	col.OnError(func(r *colly.Response, err error) {
+		fmt.Fprintf(w, "Server responded with a " + string(r.StatusCode))
+	})
 	if category == "" {
-		col.Visit("https://www.spinworkx.com/main/")
+		if page == "" || page == "1" {
+			col.Visit("https://www.spinworkx.com/main/")
+		} else {
+			col.Visit("https://www.spinworkx.com/main/page/" + page)
+		}
 	} else {
-		col.Visit("https://www.spinworkx.com/main/product-category/" + category)
+		if page == "" || page == "1" {
+			col.Visit("https://www.spinworkx.com/main/product-category/" + category)
+		} else {
+			col.Visit("https://www.spinworkx.com/main/product-category/" + category + "/page/" + page)
+		}
 	}
 }
