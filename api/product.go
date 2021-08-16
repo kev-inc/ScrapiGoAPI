@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"github.com/gocolly/colly"
@@ -54,7 +55,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		})
 	})
 	col.OnScraped(func(r *colly.Response) {
-		fmt.Fprintf(w, "%+v\n", product)
+		j, err := json.Marshal(product)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Fprintf(w, string(j))
 	})
 	col.Visit("https://www.spinworkx.com/main/product/" + name)
 }
