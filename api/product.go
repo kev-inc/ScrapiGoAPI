@@ -55,7 +55,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		})
 	})
 	col.OnScraped(func(r *colly.Response) {
-		j, err := json.Marshal(product)
+		j, err := json.MarshalIndent(product, "", "\t")
 		if err != nil {
 			fmt.Println(err)
 			return
