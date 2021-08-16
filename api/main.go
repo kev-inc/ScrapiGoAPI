@@ -1,6 +1,7 @@
 package handler
 
 import (
+    "strconv"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -39,7 +40,7 @@ func GetMain(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, string(j))
 	})
 	col.OnError(func(r *colly.Response, err error) {
-		fmt.Fprintf(w, "Server responded with a " + string(r.StatusCode))
+		fmt.Fprintf(w, "Server responded with a " + strconv.Itoa(r.StatusCode))
 	})
 	if category == "" {
 		if page == "" || page == "1" {
