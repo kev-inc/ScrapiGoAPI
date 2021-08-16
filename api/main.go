@@ -15,7 +15,7 @@ func GetMain(w http.ResponseWriter, r *http.Request) {
 		Href	string	`json:"href"`
 	}
 	items := []Item{}
-	// category := r.URL.Query().Get("category")
+	category := r.URL.Query().Get("category")
 
 	col := colly.NewCollector()
 	col.OnHTML("ul.products", func(e *colly.HTMLElement) {
@@ -37,5 +37,9 @@ func GetMain(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Fprintf(w, string(j))
 	})
-	col.Visit("https://www.spinworkx.com/main/")
+	if category == "" {
+		col.Visit("https://www.spinworkx.com/main/")
+	} else {
+		col.Visit("https://www.spinworkx.com/main/product-category/" + category)
+	}
 }
