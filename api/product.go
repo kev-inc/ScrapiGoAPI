@@ -7,7 +7,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func GetProduct(w http.ResponseWriter, r *http.Request) {
 	type Images struct {
 		Src       string	`json:"src"`
 		Thumbnail string	`json:"thumbnail"`
